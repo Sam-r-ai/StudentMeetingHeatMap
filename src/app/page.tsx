@@ -1,7 +1,11 @@
-export default function Home() {
-  return (
-    <div className="flex justify-center items-center">
-      <h1 className="text-3xl">Hello Heatmap!</h1>
-    </div>
-  );
+import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
+
+export default async function Page() {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data: todos } = await supabase.from("instruments").select();
+
+  return <ul>{todos?.map((todo, i) => <li key={i}>{todo.name}</li>)}</ul>;
 }
