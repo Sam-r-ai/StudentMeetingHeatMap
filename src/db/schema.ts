@@ -1,3 +1,4 @@
+import { InferSelectModel } from "drizzle-orm";
 import { AnyPgColumn, integer, pgEnum, pgTable, bigserial, text, time, char, serial } from "drizzle-orm/pg-core";
 
 export const instructionModeEnum = pgEnum("instructionMode", ["virtual", "inperson"])
@@ -41,3 +42,10 @@ export const weekdayTable = pgTable("Weekday", {
     name: text(),
     abbr: text(),
 });
+
+export type Major = InferSelectModel<typeof majorTable>;
+export type Course = InferSelectModel<typeof courseTable>;
+export type Term = InferSelectModel<typeof termTable>;
+export type Session = InferSelectModel<typeof sessionTable>;
+export type Occupancy = InferSelectModel<typeof occupancyTable>;
+export type Weekday = InferSelectModel<typeof weekdayTable>;
