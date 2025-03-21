@@ -4,43 +4,43 @@ import { AnyPgColumn, integer, pgEnum, pgTable, bigserial, text, time, char, ser
 export const instructionModeEnum = pgEnum("instructionMode", ["virtual", "inperson"])
 
 export const courseTable = pgTable("Course", {
-    id: serial().primaryKey(),
-    majorId: integer().references((): AnyPgColumn => majorTable.id),
-    catalogNumber: text(),
+    id: serial().primaryKey().notNull(),
+    majorId: integer().references((): AnyPgColumn => majorTable.id).notNull(),
+    catalogNumber: text().notNull(),
 })
 
 export const majorTable = pgTable("Major", {
-    id: serial().primaryKey(),
-    abbr: text(),
-    name: text(),
+    id: serial().primaryKey().notNull(),
+    abbr: text().notNull(),
+    name: text().notNull(),
 })
 
 export const termTable = pgTable("Term", {
-    id: integer().primaryKey(),
+    id: integer().primaryKey().notNull(),
     dscr: text(),
 })
 
 export const sessionTable = pgTable("Session", {
-    id: bigserial({ mode: 'number' }).primaryKey(),
-    courseId: integer().references((): AnyPgColumn => courseTable.id),
-    termId: integer().references((): AnyPgColumn => termTable.id),
-    sectionCode: integer(),
-    instructionMode: char({ length: 1 }),
+    id: bigserial({ mode: 'number' }).primaryKey().notNull(),
+    courseId: integer().references((): AnyPgColumn => courseTable.id).notNull(),
+    termId: integer().references((): AnyPgColumn => termTable.id).notNull(),
+    sectionCode: integer().notNull(),
+    instructionMode: char({ length: 1 }).notNull(),
 });
 
 export const occupancyTable = pgTable("Occupancy", {
-    id: bigserial({ mode: 'number' }).primaryKey(),
-    sessionId: integer().references((): AnyPgColumn => sessionTable.id),
-    time: time(),
-    weekdayId: integer().references((): AnyPgColumn => weekdayTable.id),
-    enrollmentTotal: integer(),
+    id: bigserial({ mode: 'number' }).primaryKey().notNull(),
+    sessionId: integer().references((): AnyPgColumn => sessionTable.id).notNull(),
+    time: time().notNull(),
+    weekdayId: integer().references((): AnyPgColumn => weekdayTable.id).notNull(),
+    enrollmentTotal: integer().notNull(),
 });
 
 
 export const weekdayTable = pgTable("Weekday", {
-    id: integer().primaryKey(),
-    name: text(),
-    abbr: text(),
+    id: integer().primaryKey().notNull(),
+    name: text().notNull(),
+    abbr: text().notNull(),
 });
 
 export type Major = InferSelectModel<typeof majorTable>;
