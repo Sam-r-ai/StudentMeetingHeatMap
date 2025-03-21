@@ -1,46 +1,43 @@
-import { AnyPgColumn, integer, pgEnum, pgSchema, text, time } from "drizzle-orm/pg-core";
-
-export const heatmapSchema = pgSchema("heatmap")
+import { AnyPgColumn, integer, pgEnum, pgTable, bigserial, text, time, char, serial } from "drizzle-orm/pg-core";
 
 export const instructionModeEnum = pgEnum("instructionMode", ["virtual", "inperson"])
 
-export const majorTable = heatmapSchema.table("Major", {
-    id: integer().primaryKey(),
-    name: text(),
-})
-
-export const courseTable = heatmapSchema.table("Course", {
-    id: integer().primaryKey(),
+export const courseTable = pgTable("Course", {
+    id: serial().primaryKey(),
     majorId: integer().references((): AnyPgColumn => majorTable.id),
+    catalogNumber: text(),
 })
 
-export const termTable = heatmapSchema.table("Term", {
-    id: integer().primaryKey(),
+export const majorTable = pgTable("Major", {
+    id: serial().primaryKey(),
+    abbr: text(),
     name: text(),
 })
 
-export const weekdayTable = heatmapSchema.table("Weekday", {
+export const termTable = pgTable("Term", {
     id: integer().primaryKey(),
-    name: text(),
-});
+    dscr: text(),
+})
 
-export const timeSlotTable = heatmapSchema.table("TimeSlot", {
-    id: integer().primaryKey(),
-    time: time(),
-});
-
-export const sessionTable = heatmapSchema.table("Session", {
-    id: integer().primaryKey(),
+export const sessionTable = pgTable("Session", {
+    id: bigserial({ mode: 'number' }).primaryKey(),
     courseId: integer().references((): AnyPgColumn => courseTable.id),
     termId: integer().references((): AnyPgColumn => termTable.id),
-    name: text(),
-    instructionMode: instructionModeEnum(),
+    sectionCode: integer(),
+    instructionMode: char({ length: 1 }),
 });
 
-export const occupancyTable = heatmapSchema.table("Occupancy", {
-    id: integer().primaryKey(),
+export const occupancyTable = pgTable("Occupancy", {
+    id: bigserial({ mode: 'number' }).primaryKey(),
     sessionId: integer().references((): AnyPgColumn => sessionTable.id),
+    time: time(),
     weekdayId: integer().references((): AnyPgColumn => weekdayTable.id),
-    timeSlotId: integer().references((): AnyPgColumn => timeSlotTable.id),
-    studentCount: integer(),
+    enrollmentTotal: integer(),
+});
+
+
+export const weekdayTable = pgTable("Weekday", {
+    id: integer().primaryKey(),
+    name: text(),
+    abbr: text(),
 });

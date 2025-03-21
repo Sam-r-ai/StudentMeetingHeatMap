@@ -1,11 +1,13 @@
-import { createClient } from "@/utils/supabase/server";
-import { cookies } from "next/headers";
+import { getMajors } from "./actions";
 
 export default async function Page() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const majors = await getMajors();
 
-  const { data: todos } = await supabase.from("instruments").select();
-
-  return <ul>{todos?.map((todo, i) => <li key={i}>{todo.name}</li>)}</ul>;
+  return (
+    <ul>
+      {majors.map((major) => {
+        return <li key={major.id}>{major.name}</li>;
+      })}
+    </ul>
+  );
 }
