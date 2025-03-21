@@ -1,13 +1,7 @@
-import { getMajors } from "./actions";
-
-export default async function Page() {
-  const majors = await getMajors();
-
+export default function Page() {
   return (
-    <ul>
-      {majors.map((major) => {
-        return <li key={major.id}>{major.name}</li>;
-      })}
-    </ul>
+    <main className="flex flex-col justify-center items-center w-screen h-screen">
+      <label>Select Course</label>
+    </main>
   );
 }
