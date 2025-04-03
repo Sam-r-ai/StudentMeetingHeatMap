@@ -1,16 +1,11 @@
-To start Dockerfile:
+# Student Meeting Heat Map
 
-To build the container:
+A web app that shows which times are most popular for student course enrollment across campus.
+
+The heat map visualization helps students and faculty quickly identify optimal meeting times while avoiding scheduling conflicts.
+
+## How to Start the App
+
 ```bash
-docker build -t studentmeetingheatmap .
+docker compose up
 ```
-
-To run the container:
-
-```bash
-docker run -p 3000:3000 studentmeetingheatmap
-```
-
-Then go to localhost:3000 in your browser.
-
-When you exit, remember to kill the docker process. Run command docker ps -> then copy the number (something like 306ccbe5f009) -> then run docker kill that number (e.g 306ccbe5f009)
