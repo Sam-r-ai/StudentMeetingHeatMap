@@ -2,7 +2,7 @@ services:
   nextjs:
     build: .
     ports:
-      - "3000:3000"
-    #volumes:
-    #  - .:/app # Map our directory to the Docker /app directory
-    command: pnpm dev
+      - '3000:3000'
+    volumes:
+      - .:/app # Map our directory to the Docker /app directory
+    command: sh -c 'pnpm i && pnpm dev'
