@@ -3,6 +3,6 @@ services:
     build: .
     ports:
       - "3000:3000"
-    volumes:
-      - .:/app # Map our directory to the Docker /app directory
+    #volumes:
+    #  - .:/app # Map our directory to the Docker /app directory
     command: pnpm dev
