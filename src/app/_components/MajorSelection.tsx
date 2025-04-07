@@ -1,6 +1,7 @@
 "use client";
 
 import { getMajors } from "@/app/actions";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -14,16 +15,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Major } from "@/db/schema";
+import type { Major } from "@/db/schema";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
-
-type MajorSelectionItem = {
-  id: number;
-  value: string;
-  selected?: Major;
-};
+import { Check } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import GenerateHeatmapButton from "./GenerateHeatmapButton";
 
 export default function MajorSelection() {
   const { data: majors = [] } = useQuery({
@@ -31,84 +27,90 @@ export default function MajorSelection() {
     queryFn: () => getMajors(),
   });
 
-  const [selectors, setSelectors] = useState<MajorSelectionItem[]>([
-    { id: 0, value: "" },
-  ]);
+  const [selected, setSelected] = useState<Major[]>([]);
+  const [openPopover, setOpenPopover] = useState(false);
 
-  const [openPopover, setOpenPopover] = useState<number | null>(null);
+  /* What's currently in the input */
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const addSelector = () => {
-    setSelectors((prev) => [
-      ...prev,
-      { id: Date.now(), value: "" },
-    ]);
+  const CommandInputRef = useRef<HTMLInputElement>(null);
+  const CommandListRef = useRef<HTMLDivElement>(null);
+
+  const updateSelection = (major: Major) => {
+    /* Remove the major from the selected list if it's already there */
+    /* Otherwise, add it to the selected list */
+    selected.includes(major)
+      ? setSelected(selected.filter((s) => s.id !== major.id))
+      : setSelected([...selected, major]);
+
+    /* Focus the input after selection */
+    setTimeout(() => {
+      CommandInputRef.current?.focus();
+    }, 0);
   };
 
-  const removeSelector = (id: number) => {
-    setSelectors((prev) => prev.filter((s) => s.id !== id));
-  };
-
-  const updateSelection = (id: number, major: Major) => {
-    setSelectors((prev) =>
-      prev.map((s) =>
-        s.id === id ? { ...s, value: `${major.name} (${major.abbr})`, selected: major } : s
-      )
-    );
-    setOpenPopover(null);
-  };
+  /* Reset scroll position when search query changes */
+  useEffect(() => {
+    if (CommandListRef.current) {
+      CommandListRef.current.scrollTop = 0;
+    }
+  }, [searchQuery]);
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      {selectors.map((selector, index) => (
-        <div key={selector.id} className="flex items-center gap-2">
-          {index === 0 ? (
-            <button onClick={addSelector} className="p-2">
-              <Plus />
-            </button>
-          ) : (
-            <button
-              onClick={() => removeSelector(selector.id)}
-              className="text-red-500 p-2"
-            >
-              <Trash2 />
-            </button>
-          )}
-
-          <Popover
-            open={openPopover === selector.id}
-            onOpenChange={(isOpen) =>
-              setOpenPopover(isOpen ? selector.id : null)
-            }
+    <>
+      <Popover open={openPopover} onOpenChange={setOpenPopover}>
+        <PopoverTrigger asChild>
+          <Button
+            role="combobox"
+            aria-expanded={openPopover}
+            variant="outline"
+            className="w-xs"
           >
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                className="justify-between w-[250px]"
-              >
-                {selector.value || "Click here to select!"}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0 w-[250px]">
-              <Command>
-                <CommandInput placeholder="Search majors..." />
-                <CommandList>
-                  <CommandEmpty>No majors found.</CommandEmpty>
-                  {majors.map((major) => (
-                    <CommandItem
-                      key={major.id}
-                      value={`${major.name}${major.abbr}`}
-                      onSelect={() => updateSelection(selector.id, major)}
-                    >
-                      {`${major.name} (${major.abbr})`}
-                    </CommandItem>
-                  ))}
-                </CommandList>
-              </Command>
-            </PopoverContent>
-          </Popover>
+            {selected.length === 0 && "Click here to select!"}
+            {selected.length > 0 && `Selected ${selected.length} majors`}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-xs">
+          <Command>
+            <CommandInput
+              ref={CommandInputRef}
+              placeholder="Search majors..."
+              onValueChange={setSearchQuery}
+            />
+            <CommandList ref={CommandListRef}>
+              <CommandEmpty>No majors found.</CommandEmpty>
+              {majors.map((major) => (
+                <CommandItem
+                  key={major.id}
+                  value={`${major.abbr}${major.name}`}
+                  onSelect={() => updateSelection(major)}
+                >
+                  {selected.includes(major) ? (
+                    <Check className="text-muted-foreground" />
+                  ) : (
+                    /* Use opacity-0 to get spacing but not visibility */
+                    <Check className="opacity-0" />
+                  )}
+
+                  {`${major.name} (${major.abbr})`}
+                </CommandItem>
+              ))}
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <GenerateHeatmapButton />
+
+      {selected.length > 0 && (
+        <div className="flex overflow-y-auto flex-wrap gap-2 justify-center max-w-lg">
+          {selected.map((major) => (
+            <Badge key={major.id} variant="secondary">
+              {major.name}
+            </Badge>
+          ))}
         </div>
-      ))}
-    </div>
+      )}
+    </>
   );
 }
