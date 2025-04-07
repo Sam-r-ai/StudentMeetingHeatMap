@@ -36,11 +36,15 @@ export default function MajorSelection() {
   const CommandInputRef = useRef<HTMLInputElement>(null);
   const CommandListRef = useRef<HTMLDivElement>(null);
 
+  const removeSelection = (major: Major) => {
+    setSelected(selected.filter((s) => s.id !== major.id));
+  };
+
   const updateSelection = (major: Major) => {
     /* Remove the major from the selected list if it's already there */
     /* Otherwise, add it to the selected list */
     selected.includes(major)
-      ? setSelected(selected.filter((s) => s.id !== major.id))
+      ? removeSelection(major)
       : setSelected([...selected, major]);
 
     /* Focus the input after selection */
@@ -64,10 +68,11 @@ export default function MajorSelection() {
             role="combobox"
             aria-expanded={openPopover}
             variant="outline"
-            className="w-xs"
+            className="hover:cursor-pointer w-xs"
           >
             {selected.length === 0 && "Click here to select!"}
-            {selected.length > 0 && `Selected ${selected.length} majors`}
+            {selected.length === 1 && `Selected ${selected.length} major`}
+            {selected.length > 1 && `Selected ${selected.length} majors`}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-xs">
@@ -84,6 +89,7 @@ export default function MajorSelection() {
                   key={major.id}
                   value={`${major.abbr}${major.name}`}
                   onSelect={() => updateSelection(major)}
+                  className="cursor-pointer"
                 >
                   {selected.includes(major) ? (
                     <Check className="text-muted-foreground" />
@@ -105,7 +111,13 @@ export default function MajorSelection() {
       {selected.length > 0 && (
         <div className="flex overflow-y-auto flex-wrap gap-2 justify-center max-w-lg">
           {selected.map((major) => (
-            <Badge key={major.id} variant="secondary">
+            <Badge
+              key={major.id}
+              variant="secondary"
+              className="cursor-pointer"
+              title={`Remove ${major.name}`}
+              onMouseDown={() => removeSelection(major)}
+            >
               {major.name}
             </Badge>
           ))}
