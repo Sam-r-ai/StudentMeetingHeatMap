@@ -40,12 +40,19 @@ export default function MajorSelection() {
     setSelected(selected.filter((s) => s.id !== major.id));
   };
 
+  const addSelection = (major: Major) => {
+    /* Add item, sort by Major.abbreviation (order that selection list is in) */
+    setSelected(
+      [...selected, major].toSorted((a: Major, b: Major) =>
+        a.abbr.localeCompare(b.abbr),
+      ),
+    );
+  };
+
   const updateSelection = (major: Major) => {
     /* Remove the major from the selected list if it's already there */
     /* Otherwise, add it to the selected list */
-    selected.includes(major)
-      ? removeSelection(major)
-      : setSelected([...selected, major]);
+    selected.includes(major) ? removeSelection(major) : addSelection(major);
 
     /* Focus the input after selection */
     setTimeout(() => {
@@ -114,7 +121,7 @@ export default function MajorSelection() {
             <Badge
               key={major.id}
               variant="secondary"
-              className="cursor-pointer"
+              className="cursor-pointer hover:line-through hover:opacity-85"
               title={`Remove ${major.name}`}
               onMouseDown={() => removeSelection(major)}
             >
