@@ -1,9 +1,12 @@
-import React from "react";
+import { Button } from "@/components/ui/button";
 
 export default function GenerateHeatmapButton() {
   return (
-    <button className="bg-[#2e2e2e] text-white px-4 py-2 rounded-md">
+    <Button
+      variant="default"
+      className="py-2 px-4 rounded-md hover:cursor-pointer"
+    >
       Generate Heatmap
-    </button>
+    </Button>
   );
 }
