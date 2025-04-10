@@ -1,7 +1,10 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Providers } from "./providers";
+import { Providers } from "./providers"; // Import Providers component
+import Header from "./_components/header";
+
+// app/layout.tsx
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,7 +18,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Student Heatmap",
-  description: "",
+  description: "Visualize student activity with interactive mapping",
 };
 
 export default function RootLayout({
@@ -26,9 +29,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-red-600`}
       >
-        <Providers>{children}</Providers>
+        {/* Wrap entire app in Providers to include QueryClientProvider */}
+        <Providers>
+          <Header/>
+          {children}
+        </Providers>
       </body>
     </html>
   );
