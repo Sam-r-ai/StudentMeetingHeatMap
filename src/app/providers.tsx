@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, ReactNode } from 'react';
 
 /**
  * Provides application-wide context providers for data fetching and theming.
@@ -26,10 +26,12 @@ import { useState } from "react";
  * - Wrapping providers in a client component that gets imported instead of around our
  *   layout.tsx stops layout.tsx from being a client component unnecessarily
  */
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: { children: ReactNode }) { //wraps components in Providers component
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      {children}
+    </QueryClientProvider>
   );
 }
