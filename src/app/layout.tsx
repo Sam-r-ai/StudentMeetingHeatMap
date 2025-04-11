@@ -1,8 +1,8 @@
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Providers } from "./providers"; // Import Providers component
 import Header from "./_components/header";
+import { Providers } from "./providers"; // Import Providers component
 
 // app/layout.tsx
 
@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         {/* Wrap entire app in Providers to include QueryClientProvider */}
         <Providers>
-          <Header/>
+          <Header />
           {children}
         </Providers>
       </body>
