@@ -25,11 +25,15 @@ function HeatMap() {
 export default function Page() {
   const { heatmapShown } = useHeatmap();
   return (
-    <div className="p-4 h-screen text-2xl">
+    <div className="p-4 h-screen text-2xl text-foreground">
       <div className="px-4 w-full h-full rounded-lg">
         <div className="flex flex-col justify-center items-center w-full h-full">
           <MajorForm />
-          {heatmapShown && <HeatMap />}
+          {heatmapShown && (
+            <div className="flex w-full duration-300 animate-in fade-in slide-in-from-bottom grow">
+              <HeatMap />
+            </div>
+          )}
         </div>
       </div>
     </div>

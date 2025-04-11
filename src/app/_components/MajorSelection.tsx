@@ -28,8 +28,12 @@ export default function MajorSelection() {
     queryFn: () => getMajors(),
   });
 
-  const [selected, setSelected] = useState<Major[]>([]);
   const [openPopover, setOpenPopover] = useState(false);
+
+  const [selected, setSelected] = useState<Major[]>([]);
+
+  /* Track which majors are in process of being removed */
+  const [removingMajors, setRemovingMajors] = useState<Major[]>([]);
 
   /* What's currently in the input */
   const [searchQuery, setSearchQuery] = useState("");
@@ -38,7 +42,12 @@ export default function MajorSelection() {
   const CommandListRef = useRef<HTMLDivElement>(null);
 
   const removeSelection = (major: Major) => {
-    setSelected(selected.filter((s) => s.id !== major.id));
+    setRemovingMajors([...removingMajors, major]);
+
+    setTimeout(() => {
+      setSelected(selected.filter((s) => s.id !== major.id));
+      setRemovingMajors(removingMajors.filter((m) => m.id !== major.id));
+    }, 100);
   };
 
   const updateSelection = (major: Major) => {
@@ -112,12 +121,17 @@ export default function MajorSelection() {
         <Button
           variant="destructive"
           className={cn(
+            "duration-100",
             selected.length > 0
               ? "opacity-100 hover:bg-destructive/80"
               : "opacity-25 hover:bg-destructive",
           )}
           onMouseDown={() => {
-            setSelected([]);
+            setRemovingMajors([...selected]);
+            setTimeout(() => {
+              setSelected([]);
+              setRemovingMajors([]);
+            }, 200);
           }}
         >
           Clear Majors
@@ -132,7 +146,12 @@ export default function MajorSelection() {
             <Badge
               key={major.id}
               variant="secondary"
-              className="cursor-pointer"
+              className={cn(
+                "cursor-pointer transition-all duration-200",
+                removingMajors.includes(major)
+                  ? "opacity-0 scale-95"
+                  : "opacity-100 hover:opacity-75 hover:line-through",
+              )}
               title={`Remove ${major.name}`}
               onMouseDown={() => removeSelection(major)}
             >
