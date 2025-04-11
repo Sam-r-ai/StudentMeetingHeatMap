@@ -15,7 +15,7 @@ function MajorForm() {
 function HeatMap() {
   return (
     <div className="flex justify-center p-4 w-full grow">
-      <div className="w-full h-full bg-purple-300 max-w-[64rem]">
+      <div className="w-full bg-purple-300 h-128 max-w-[64rem]">
         Heatmap Here!
       </div>
     </div>
@@ -25,7 +25,7 @@ function HeatMap() {
 export default function Page() {
   const { heatmapShown } = useHeatmap();
   return (
-    <div className="p-4 h-screen text-2xl text-foreground">
+    <div className="p-4 h-full text-2xl text-foreground">
       <div className="px-4 w-full h-full rounded-lg">
         <div className="flex flex-col justify-center items-center w-full h-full">
           <MajorForm />
