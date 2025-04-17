@@ -49,3 +49,14 @@ export type Term = InferSelectModel<typeof termTable>;
 export type Session = InferSelectModel<typeof sessionTable>;
 export type Occupancy = InferSelectModel<typeof occupancyTable>;
 export type Weekday = InferSelectModel<typeof weekdayTable>;
+
+
+export const enrollmentHeatmapView = pgTable("enrollment_heatmap_view", {
+    timeSlot: text("time_slot"),
+    weekday: text("weekday"),
+    majorAbbr: text("major_abbr"),
+    totalEnrollment: integer("total_enrollment"),
+  });
+  
+  export type EnrollmentHeatmap = InferSelectModel<typeof enrollmentHeatmapView>;
+  
