@@ -7,18 +7,15 @@ import { FaDiscord, FaLinkedin } from "react-icons/fa";
 export default function Header() {
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-white border-b">
-      {/* Logo - now wrapped in Link to devtest */}
+      {/* Logo - no longer linked to devtest */}
       <div className="flex items-center space-x-4">
-        <Link href="/devtest">
-          <Image
-            src="/logo.png"
-            alt="Technical Projects Club Logo"
-            width={250}
-            height={60}
-            priority
-            className="cursor-pointer"
-          />
-        </Link>
+        <Image
+          src="/logo.png"
+          alt="Technical Projects Club Logo"
+          width={250}
+          height={60}
+          priority
+        />
       </div>
 
       {/* Social Icons */}
