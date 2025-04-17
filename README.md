@@ -7,5 +7,11 @@ The heat map visualization helps students and faculty quickly identify optimal m
 ## How to Start the App
 
 ```bash
-docker compose up
+docker compose up --build
+```
+
+## How to remove containers
+
+```bash
+docker compose down --remove-orphans
 ```
