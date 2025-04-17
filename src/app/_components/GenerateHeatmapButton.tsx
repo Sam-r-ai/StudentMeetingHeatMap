@@ -1,15 +1,22 @@
-import { useHeatmap } from "@/app/_context/heatmapShown";
+"use client";
+
 import { Button } from "@/components/ui/button";
 
-export default function GenerateHeatmapButton() {
-  const { setHeatmapShow } = useHeatmap();
+export default function GenerateHeatmapButton({
+  onClick,
+  isLoading,
+}: {
+  onClick: () => void;
+  isLoading: boolean;
+}) {
   return (
     <Button
+      onClick={onClick}
+      disabled={isLoading}
       variant="default"
-      className="rounded-md hover:cursor-pointer"
-      onMouseDown={() => setHeatmapShow(true)}
+      className="py-2 px-4 rounded-md hover:cursor-pointer"
     >
-      Generate Heatmap
+      {isLoading ? "Generating..." : "Generate Heatmap"}
     </Button>
   );
 }

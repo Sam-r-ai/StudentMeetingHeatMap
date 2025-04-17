@@ -22,20 +22,24 @@ import { Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import GenerateHeatmapButton from "./GenerateHeatmapButton";
 
-export default function MajorSelection() {
+export default function MajorSelection({
+  selected,
+  setSelected,
+  onGenerateClick,
+  isGenerating,
+}: {
+  selected: Major[];
+  setSelected: (majors: Major[]) => void;
+  onGenerateClick: () => void;
+  isGenerating: boolean;
+}) {
   const { data: majors = [] } = useQuery({
     queryKey: ["majors"],
     queryFn: () => getMajors(),
   });
 
   const [openPopover, setOpenPopover] = useState(false);
-
-  const [selected, setSelected] = useState<Major[]>([]);
-
-  /* Track which majors are in process of being removed */
   const [removingMajors, setRemovingMajors] = useState<Major[]>([]);
-
-  /* What's currently in the input */
   const [searchQuery, setSearchQuery] = useState("");
 
   const CommandInputRef = useRef<HTMLInputElement>(null);
@@ -51,19 +55,15 @@ export default function MajorSelection() {
   };
 
   const updateSelection = (major: Major) => {
-    /* Remove the major from the selected list if it's already there */
-    /* Otherwise, add it to the selected list */
     selected.includes(major)
       ? removeSelection(major)
       : setSelected([...selected, major]);
 
-    /* Focus the input after selection */
     setTimeout(() => {
       CommandInputRef.current?.focus();
     }, 0);
   };
 
-  /* Reset scroll position when search query changes */
   useEffect(() => {
     if (CommandListRef.current) {
       CommandListRef.current.scrollTop = 0;
@@ -104,10 +104,8 @@ export default function MajorSelection() {
                   {selected.includes(major) ? (
                     <Check className="text-muted-foreground" />
                   ) : (
-                    /* Use opacity-0 to get spacing but not visibility */
                     <Check className="opacity-0" />
                   )}
-
                   {`${major.name} (${major.abbr})`}
                 </CommandItem>
               ))}
@@ -117,7 +115,10 @@ export default function MajorSelection() {
       </Popover>
 
       <div className="flex gap-4">
-        <GenerateHeatmapButton />
+        <GenerateHeatmapButton
+          onClick={onGenerateClick}
+          isLoading={isGenerating}
+        />
         <Button
           variant="destructive"
           className={cn(
