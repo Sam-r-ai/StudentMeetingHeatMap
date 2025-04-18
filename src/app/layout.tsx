@@ -4,8 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "./_components/header";
 import { Providers } from "./providers"; // Import Providers component
 
-// app/layout.tsx
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,12 +27,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-red-600`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* Wrap entire app in Providers to include QueryClientProvider */}
         <Providers>
-          <Header />
-          {children}
+          <div className="flex flex-col h-dvh">
+            <Header />
+            <div className="flex-[1]">{children}</div>
+          </div>
         </Providers>
       </body>
     </html>
