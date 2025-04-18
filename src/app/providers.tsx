@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import { type ReactNode, useState } from "react";
 import { HeatmapProvider } from "./_context/heatmapShown";
-import AuthProvider from "./AuthProvider";
+import AuthProvider from "@/lib/AuthProvider";
 
 /**
  * Provides application-wide context providers for data fetching and theming.
