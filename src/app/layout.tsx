@@ -31,8 +31,10 @@ export default function RootLayout({
       >
         {/* Wrap entire app in Providers to include QueryClientProvider */}
         <Providers>
-          <Header />
-          {children}
+          <div className="flex flex-col h-dvh">
+            <Header />
+            <div className="flex-[1]">{children}</div>
+          </div>
         </Providers>
       </body>
     </html>
