@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-red-600`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {/* Wrap entire app in Providers to include QueryClientProvider */}
         <Providers>
