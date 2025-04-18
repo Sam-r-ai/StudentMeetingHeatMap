@@ -6,12 +6,12 @@ import { signIn } from "next-auth/react";
 export default function SignInButton() {
   return (
     <Button
-      className="flex items-center py-8 w-1/2 text-2xl cursor-pointer gap-3"
+      className="flex gap-3 items-center py-8 w-1/2 text-2xl cursor-pointer"
       variant="outline"
-      onMouseDown={() => signIn("google")}
+      onMouseDown={() => signIn("google", { callbackUrl: "/" })}
     >
       <svg
-      className="h-full"
+        className="h-full"
         viewBox="-3 0 262 262"
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="xMidYMid"
