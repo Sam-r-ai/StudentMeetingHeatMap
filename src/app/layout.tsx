@@ -4,8 +4,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "./_components/header";
 import { Providers } from "./providers"; // Import Providers component
 
-// app/layout.tsx
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
