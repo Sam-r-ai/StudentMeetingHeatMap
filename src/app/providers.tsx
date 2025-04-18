@@ -1,8 +1,10 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SessionProvider } from "next-auth/react";
 import { type ReactNode, useState } from "react";
 import { HeatmapProvider } from "./_context/heatmapShown";
+import AuthProvider from "./AuthProvider";
 
 /**
  * Provides application-wide context providers for data fetching and theming.
@@ -32,8 +34,12 @@ export function Providers({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <HeatmapProvider>{children}</HeatmapProvider>
-    </QueryClientProvider>
+    <SessionProvider>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <HeatmapProvider>{children}</HeatmapProvider>
+        </QueryClientProvider>
+      </AuthProvider>
+    </SessionProvider>
   );
 }
