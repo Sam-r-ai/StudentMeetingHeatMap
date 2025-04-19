@@ -14,33 +14,53 @@ type HeatmapDataPoint = {
   total_enrollment: number;
 };
 
+function HeatmapLegend() {
+  return (
+    <div className="flex flex-wrap gap-2 justify-center items-center mt-4">
+      <div className="flex gap-1 items-center">
+        <div className="w-4 h-4 bg-green-600"></div>
+        <span className="mr-2 text-sm">Most Available</span>
+      </div>
+
+      <div className="flex gap-1 items-center">
+        <div className="w-4 h-4 bg-green-400"></div>
+        <span className="mr-2 text-sm">Very Available</span>
+      </div>
+
+      <div className="flex gap-1 items-center">
+        <div className="w-4 h-4 bg-lime-400"></div>
+        <span className="mr-2 text-sm">Available</span>
+      </div>
+
+      <div className="flex gap-1 items-center">
+        <div className="w-4 h-4 bg-yellow-300"></div>
+        <span className="mr-2 text-sm">Moderate</span>
+      </div>
+
+      <div className="flex gap-1 items-center">
+        <div className="w-4 h-4 bg-orange-400"></div>
+        <span className="mr-2 text-sm">Busy</span>
+      </div>
+
+      <div className="flex gap-1 items-center">
+        <div className="w-4 h-4 bg-red-600"></div>
+        <span className="text-sm">Very Busy</span>
+      </div>
+    </div>
+  );
+}
+
 export default function Page() {
   const [selectedMajors, setSelectedMajors] = useState<Major[]>([]);
   const [heatmapShown, setHeatmapShown] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const { data: heatmapData, isFetching } = useQuery<HeatmapDataPoint[]>({
-    queryKey: ["heatmapData", selectedMajors.map((m) => m.abbr)],
-    queryFn: async () => {
-      try {
-        return await getHeatmapDataByMajors(selectedMajors.map((m) => m.abbr));
-      } catch (err) {
-        console.error("Error fetching heatmap data:", err);
-        setErrorMessage(
-          err instanceof Error ? err.message : "Failed to fetch data",
-        );
-        return [];
-      }
-    },
+  const { data: heatmapData, isFetching } = useQuery({
+    queryKey: ["heatmapData", selectedMajors],
+    queryFn: () => getHeatmapDataByMajors(selectedMajors),
     enabled: heatmapShown && selectedMajors.length > 0,
   });
-
-  useEffect(() => {
-    if (heatmapData && heatmapData.length > 0) {
-      console.log("First time format:", heatmapData[0].time);
-    }
-  }, [heatmapData]);
 
   const handleGenerateClick = () => {
     if (selectedMajors.length === 0) {
@@ -171,7 +191,7 @@ export default function Page() {
   };
 
   return (
-    <main className="flex justify-center items-center py-10 text-2xl h-full">
+    <main className="flex justify-center items-center py-10 h-full text-2xl">
       <div className="flex flex-col gap-4 justify-center items-center p-8 w-full max-w-5xl rounded-xl border border-border">
         <p>Select a major!</p>
         <MajorSelection
@@ -252,42 +272,12 @@ export default function Page() {
                 </div>
 
                 {/* Updated Legend with more gradual transitions */}
-                <div className="flex flex-wrap gap-2 justify-center items-center mt-4">
-                  <div className="flex gap-1 items-center">
-                    <div className="w-4 h-4 bg-green-600"></div>
-                    <span className="mr-2 text-sm">Most Available</span>
-                  </div>
-
-                  <div className="flex gap-1 items-center">
-                    <div className="w-4 h-4 bg-green-400"></div>
-                    <span className="mr-2 text-sm">Very Available</span>
-                  </div>
-
-                  <div className="flex gap-1 items-center">
-                    <div className="w-4 h-4 bg-lime-400"></div>
-                    <span className="mr-2 text-sm">Available</span>
-                  </div>
-
-                  <div className="flex gap-1 items-center">
-                    <div className="w-4 h-4 bg-yellow-300"></div>
-                    <span className="mr-2 text-sm">Moderate</span>
-                  </div>
-
-                  <div className="flex gap-1 items-center">
-                    <div className="w-4 h-4 bg-orange-400"></div>
-                    <span className="mr-2 text-sm">Busy</span>
-                  </div>
-
-                  <div className="flex gap-1 items-center">
-                    <div className="w-4 h-4 bg-red-600"></div>
-                    <span className="text-sm">Very Busy</span>
-                  </div>
-                </div>
+                <HeatmapLegend />
 
                 {/* Time explanation */}
-                <div className="mt-2 text-sm text-center text-gray-600">
+                <section className="mt-2 text-sm text-center text-gray-600">
                   <p>Each row represents a 30-minute time period</p>
-                </div>
+                </section>
 
                 {/* No data message */}
                 {!errorMessage &&
