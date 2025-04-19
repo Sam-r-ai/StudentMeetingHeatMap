@@ -9,7 +9,7 @@ import {
   sessionTable,
   weekdayTable,
 } from "@/db/schema";
-import { eq, inArray } from "drizzle-orm";
+import { eq, inArray, sum } from "drizzle-orm";
 
 // Get list of majors
 export async function getMajors() {
@@ -25,7 +25,11 @@ export async function getHeatmapDataByMajors(majors: Major[]) {
   const majorIds = majors.map((m) => m.id);
 
   return db
-    .select()
+    .select({
+      weekday: weekdayTable.name,
+      time: occupancyTable.time,
+      enrolled: sum(occupancyTable.enrollmentTotal),
+    })
     .from(occupancyTable)
     .innerJoin(sessionTable, eq(sessionTable.id, occupancyTable.sessionId))
     .innerJoin(courseTable, eq(courseTable.id, sessionTable.courseId))
