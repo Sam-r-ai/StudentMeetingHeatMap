@@ -11,7 +11,7 @@ export default function Header() {
       <div className="flex items-center space-x-4">
         <a href="/">
           <Image
-            src="/logo.png"
+            src="/TPClogo.png"
             alt="Technical Projects Club Logo"
             width={250}
             height={60}
