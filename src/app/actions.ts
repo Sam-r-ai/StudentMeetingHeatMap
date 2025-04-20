@@ -8,16 +8,25 @@ import {
   occupancyTable,
   sessionTable,
   Major,
+  Course,
 } from "@/db/schema";
-import { eq, inArray, sql } from "drizzle-orm";
+import { eq, getTableColumns, inArray, sql } from "drizzle-orm";
 
 // Get list of majors
-export async function getMajors() {
+export async function getMajors(): Promise<Major[]> {
   return db.select().from(majorTable);
 }
 
+export type HeatmapData = {
+  weekday: string;
+  time: string;
+  enrolled: number;
+};
+
 // Get heatmap data filtered by selected major abbreviations
-export async function getHeatmapDataByMajors(majors: Major[]) {
+export async function getHeatmapDataByMajors(
+  majors: Major[],
+): Promise<HeatmapData[]> {
   if (majors.length === 0) {
     return [];
   }
@@ -40,7 +49,7 @@ export async function getHeatmapDataByMajors(majors: Major[]) {
     .orderBy(weekdayTable.id, occupancyTable.time);
 }
 
-export async function getCoursesByMajor(majors: Major[]) {
+export async function getCoursesByMajor(majors: Major[]): Promise<Course[]> {
   if (majors.length === 0) {
     return [];
   }
@@ -48,7 +57,7 @@ export async function getCoursesByMajor(majors: Major[]) {
   const majorIds = majors.map((m) => m.id);
 
   return db
-    .select()
+    .select(getTableColumns(courseTable))
     .from(majorTable)
     .innerJoin(courseTable, eq(courseTable.majorId, majorTable.id))
     .where(inArray(majorTable.id, majorIds));
