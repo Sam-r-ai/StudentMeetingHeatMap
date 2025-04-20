@@ -166,9 +166,9 @@ export default function MajorSelection({
         <Button
           variant="destructive"
           className={cn(
-            "duration-100 cursor-pointer",
+            "duration-100",
             selected.length > 0
-              ? "opacity-100 hover:bg-destructive/80"
+              ? "opacity-100 hover:bg-destructive/80 cursor-pointer"
               : "opacity-25 hover:bg-destructive",
           )}
           onMouseDown={() => {
