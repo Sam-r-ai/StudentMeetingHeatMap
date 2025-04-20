@@ -22,6 +22,42 @@ import { Check } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import GenerateHeatmapButton from "./GenerateHeatmapButton";
 
+function BadgeArea({
+  selected,
+  removingMajors,
+  removeSelection,
+}: {
+  selected: Major[];
+  removingMajors: Major[];
+  removeSelection: (major: Major) => void;
+}) {
+  return (
+    <>
+      {selected.length === 0 && <Badge className="opacity-0">Spacer</Badge>}
+      {selected.length > 0 && (
+        <div className="flex flex-wrap gap-2 justify-center max-w-[72rem]">
+          {selected.map((major) => (
+            <Badge
+              key={major.id}
+              variant="secondary"
+              className={cn(
+                "cursor-pointer transition-all duration-200",
+                removingMajors.includes(major)
+                  ? "opacity-0 scale-95"
+                  : "opacity-100 hover:opacity-75 hover:line-through",
+              )}
+              title={`Remove ${major.name}`}
+              onMouseDown={() => removeSelection(major)}
+            >
+              {major.name}
+            </Badge>
+          ))}
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function MajorSelection({
   selected,
   setSelected,
@@ -130,7 +166,7 @@ export default function MajorSelection({
         <Button
           variant="destructive"
           className={cn(
-            "duration-100",
+            "duration-100 cursor-pointer",
             selected.length > 0
               ? "opacity-100 hover:bg-destructive/80"
               : "opacity-25 hover:bg-destructive",
@@ -147,28 +183,11 @@ export default function MajorSelection({
         </Button>
       </div>
 
-      {selected.length === 0 && <Badge className="opacity-0">Spacer</Badge>}
-
-      {selected.length > 0 && (
-        <div className="flex flex-wrap gap-2 justify-center max-w-[72rem]">
-          {selected.map((major) => (
-            <Badge
-              key={major.id}
-              variant="secondary"
-              className={cn(
-                "cursor-pointer transition-all duration-200",
-                removingMajors.includes(major)
-                  ? "opacity-0 scale-95"
-                  : "opacity-100 hover:opacity-75 hover:line-through",
-              )}
-              title={`Remove ${major.name}`}
-              onMouseDown={() => removeSelection(major)}
-            >
-              {major.name}
-            </Badge>
-          ))}
-        </div>
-      )}
+      <BadgeArea
+        selected={selected}
+        removingMajors={removingMajors}
+        removeSelection={removeSelection}
+      />
     </div>
   );
 }
