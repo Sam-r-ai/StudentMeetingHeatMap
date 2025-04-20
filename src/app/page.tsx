@@ -171,7 +171,7 @@ export default function Page() {
   };
 
   return (
-    <main className="flex justify-center items-center py-10 text-2xl h-full">
+    <main className="flex justify-center items-center py-10 h-full text-2xl">
       <div className="flex flex-col gap-4 justify-center items-center p-8 w-full max-w-5xl rounded-xl border border-border">
         <p>Select a major!</p>
         <MajorSelection
