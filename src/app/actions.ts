@@ -4,10 +4,10 @@ import { db } from "@/db";
 import {
   majorTable,
   courseTable,
-  Major,
+  weekdayTable,
   occupancyTable,
   sessionTable,
-  weekdayTable,
+  Major,
 } from "@/db/schema";
 import { eq, inArray, sum } from "drizzle-orm";
 
