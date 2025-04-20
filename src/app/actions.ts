@@ -1,8 +1,8 @@
 "use server";
 
 import { db } from "@/db";
-import { majorTable, courseTable, sessionTable, occupancyTable, weekdayTable } from "@/db/schema";
-import { eq, inArray, sql } from "drizzle-orm";
+import { majorTable, courseTable } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
 
 // Get list of majors
 export async function getMajors() {
