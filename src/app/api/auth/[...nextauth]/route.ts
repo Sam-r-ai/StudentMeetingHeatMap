@@ -7,10 +7,10 @@ export const runtime = "nodejs"; // NextAuth v4 expects Node runtime
 const authOptions = {
   secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID!,
-      clientSecret: process.env.GOOGLE_SECRET!,
-    }),
+    //GoogleProvider({
+    //  clientId: process.env.GOOGLE_ID!,
+    //  clientSecret: process.env.GOOGLE_SECRET!,
+    //}),
   ],
 } satisfies import("next-auth").NextAuthOptions;
 
